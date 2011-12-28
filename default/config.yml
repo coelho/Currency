@@ -1,0 +1,44 @@
+# Currency created by IsCoelho
+# @author Coelho <robertcoelho@live.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+Currency:
+    # Major is the first segment [Major].Minor
+
+    # Major ([Major].Minor) 1.00 Dollar (With Seperate 1 Dollar)
+    Major: [ 'Dollar', 'Dollars' ]
+
+    # Minor (Major.[Minor]) 0.23 Coins  (With Seperate 0 Dollars, 23 Coins)
+    Minor: [ 'Coin', 'Coins' ]
+
+Account:
+    # Initial account balance when created
+    Balance: 30.0
+
+Formatting:
+    # Minor allows you to use the Minor amounts for amounts <1
+    # Example (true) 0.23 Coins and 1.23 Dollars (false) 0.23 Dollars and 1.23 Dollars
+    Minor: false
+
+    # Seperate allows your money to be shown in an alternative way,
+    # instead of 1.32 it will show as 1 Dollar 23 Coins
+    # Example (true) 1 Dollar, 23 Coins (false) 1.23 Dollars (Only if Minor is true)
+    # !!! NOTICE: This only works if Minor is set to true !!!
+    Seperate: false
+
+    # Single shows your money in another alternative way.
+    # Instead of 1.23 Dollars you will see: 1 Dollar.
+    # If your money is 0.23 you will see 0 Dollars if Minor is false, 23 Coins if Minor is true.
+    # !!! Notice: This overrides seperate !!!
+    Single: false
