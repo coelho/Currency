@@ -1,9 +1,0 @@
-name: CurrencyCore
-version: 0.1
-description: Emulates an economy
-
-author: Coelho
-website: http://www.iscoelho.com/
-
-main: is.currency.Currency
-database: true
