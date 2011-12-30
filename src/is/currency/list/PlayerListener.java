@@ -30,7 +30,7 @@ public class PlayerListener extends org.bukkit.event.player.PlayerListener {
 	}
 	
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		this.currency.getAccountManager().create(event.getPlayer().getName());
+		this.currency.getAccountManager().createAccount(event.getPlayer().getName());
 	}
 	
 }

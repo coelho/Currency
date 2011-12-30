@@ -30,7 +30,7 @@ public class AccountManager {
 		this.currency = currency;
 	}
 
-	public void create(String username) {
+	public void createAccount(String username) {
 		username = username.toLowerCase();
 		if(this.hasAccount(username)) {
 			return;
