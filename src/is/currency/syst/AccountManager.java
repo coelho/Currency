@@ -1,9 +1,14 @@
 package is.currency.syst;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import is.currency.Currency;
+import is.currency.queue.impl.AccountAmountQuery;
+import is.currency.queue.impl.AccountClearQuery;
+import is.currency.queue.impl.AccountCreateQuery;
+import is.currency.queue.impl.AccountDeleteQuery;
+import is.currency.queue.impl.AccountExistanceQuery;
+import is.currency.queue.impl.AccountListQuery;
 
 /*
  * Currency created by IsCoelho
@@ -31,29 +36,30 @@ public class AccountManager {
 	}
 
 	public void createAccount(String username) {
-		username = username.toLowerCase();
-		if(this.hasAccount(username)) {
-			return;
-		}
-		Account account = new Account();
-		account.setUsername(username);
-		account.setBalance(this.currency.getCurrencyConfig().getAccountBalance());
-		this.currency.getDatabase().save(account);
+		AccountCreateQuery query = new AccountCreateQuery(this.currency, username);
+		this.currency.getAccountQueue().submit(query);
+		query.awaitUninterruptedly();
 	}
 
+	@Deprecated
 	public void removeAccount(String username) {
-		username = username.toLowerCase();
-		this.currency.getDatabase().delete(this.currency.getDatabase().find(Account.class).where().eq("username", username).findUnique());
+		this.deleteAccount(username);
 	}
-
+	
+	public void deleteAccount(String username) {
+		AccountDeleteQuery query = new AccountDeleteQuery(this.currency, username);
+		this.currency.getAccountQueue().submit(query);
+		query.awaitUninterruptedly();
+	}
 
 	public boolean hasAccount(String username) {
-		username = username.toLowerCase();
-		return this.currency.getDatabase().find(Account.class).where().eq("username", username).findRowCount() > 0;
+		AccountExistanceQuery query = new AccountExistanceQuery(this.currency, username);
+		this.currency.getAccountQueue().submit(query);
+		query.awaitUninterruptedly();
+		return query.isExistant();
 	}
 
 	public AccountContext getAccount(String username) {
-		username = username.toLowerCase();
 		if(!this.hasAccount(username)) {
 			return null;
 		}
@@ -61,19 +67,27 @@ public class AccountManager {
 	}
 	
 	public String[] getAccounts() {
-		List<String> accounts = new ArrayList<String>();
-		for(Account account : this.currency.getDatabase().find(Account.class).findList()) {
-			accounts.add(account.getUsername().toLowerCase());
-		}
-		return accounts.toArray(new String[0]);
+		return this.getAccountList().toArray(new String[0]);
+	}
+	
+	public List<String> getAccountList() {
+		AccountListQuery query = new AccountListQuery(this.currency);
+		this.currency.getAccountQueue().submit(query);
+		query.awaitUninterruptedly();
+		return query.getListing();
 	}
 	
 	public void clear() {
-		this.currency.getDatabase().delete(Account.class);
+		AccountClearQuery query = new AccountClearQuery(this.currency);
+		this.currency.getAccountQueue().submit(query);
+		query.awaitUninterruptedly();
 	}
 	
 	public int size() {
-		return this.currency.getDatabase().find(Account.class).findRowCount();
+		AccountAmountQuery query = new AccountAmountQuery(this.currency);
+		this.currency.getAccountQueue().submit(query);
+		query.awaitUninterruptedly();
+		return query.getAmount();
 	}
 
 }

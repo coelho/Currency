@@ -1,4 +1,4 @@
-package is.currency.list;
+package is.currency.listener;
 
 import is.currency.Currency;
 

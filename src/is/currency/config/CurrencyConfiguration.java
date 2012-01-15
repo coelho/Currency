@@ -1,4 +1,4 @@
-package is.currency.conf;
+package is.currency.config;
 
 import java.io.File;
 import java.util.List;

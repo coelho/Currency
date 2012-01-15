@@ -1,4 +1,4 @@
-package is.currency.conf;
+package is.currency.config;
 
 public class ConfigurationException extends Exception {
 	

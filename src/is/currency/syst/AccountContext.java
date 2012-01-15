@@ -1,6 +1,8 @@
 package is.currency.syst;
 
 import is.currency.Currency;
+import is.currency.queue.impl.AccountBalanceQuery;
+import is.currency.queue.impl.AccountModifyQuery;
 
 /*
 * Currency created by IsCoelho
@@ -30,37 +32,28 @@ public class AccountContext {
 	}
 	
 	public double getBalance() {
-		return this.getAccount().getBalance();
+		AccountBalanceQuery query = new AccountBalanceQuery(this.currency, this.username);
+		this.currency.getAccountQueue().submit(query);
+		query.awaitUninterruptedly();
+		return query.getBalance();
 	}
 	
 	public void setBalance(double balance) {
-		Account account = this.getAccount();
-		account.setBalance(balance);
-		this.saveAccount(account);
+		AccountModifyQuery query = new AccountModifyQuery(this.currency, this.username, balance);
+		this.currency.getAccountQueue().submit(query);
+		query.awaitUninterruptedly();
 	}
 	
 	public void addBalance(double balance) {
-		Account account = this.getAccount();
-		account.setBalance(account.getBalance() + balance);
-		this.saveAccount(account);
+		this.setBalance(this.getBalance() + balance);
 	}
 	
 	public void subtractBalance(double balance) {
-		Account account = this.getAccount();
-		account.setBalance(account.getBalance() - balance);
-		this.saveAccount(account);
+		this.setBalance(this.getBalance() - balance);
 	}
 	
 	public boolean hasBalance(double balance) {
 		return this.getBalance() >= balance;
-	}
-	
-	private Account getAccount() {
-		return this.currency.getDatabase().find(Account.class).where().eq("username", this.username).findUnique();
-	}
-	
-	private void saveAccount(Account account) {
-		this.currency.getDatabase().save(account);
 	}
 	
 	public String getUsername() {
