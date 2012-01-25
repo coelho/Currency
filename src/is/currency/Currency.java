@@ -5,14 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import is.currency.config.CurrencyConfiguration;
-import is.currency.listener.PlayerListener;
 import is.currency.queue.AccountQueue;
 import is.currency.syst.Account;
 import is.currency.syst.AccountManager;
 import is.currency.syst.FormatHelper;
 import is.currency.util.ConfigUtils;
 
-import org.bukkit.event.Event;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /*
@@ -33,8 +31,6 @@ import org.bukkit.plugin.java.JavaPlugin;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 public class Currency extends JavaPlugin {
-
-	private PlayerListener playerListener;
 
 	private Thread thread;
 	private AccountQueue accountQueue;
@@ -62,10 +58,6 @@ public class Currency extends JavaPlugin {
 		this.thread.setName("account-queue-thread");
 		this.thread.start();
 		
-		this.playerListener = new PlayerListener(this);
-		this.getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, 
-				this.playerListener, Event.Priority.Normal, this);
-		
 		System.out.println(super.getDescription().getFullName() + " authored by " 
 				+ super.getDescription().getAuthors() + " enabled.");
 	}
@@ -80,7 +72,6 @@ public class Currency extends JavaPlugin {
 		} catch(Throwable throwable) {
 			throwable.printStackTrace();
 		} finally {
-			this.playerListener = null; 
 			this.thread = null;
 			this.accountQueue = null;
 			this.accountManager = null;

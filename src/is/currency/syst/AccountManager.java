@@ -2,6 +2,10 @@ package is.currency.syst;
 
 import java.util.List;
 
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerLoginEvent;
+
 import is.currency.Currency;
 import is.currency.queue.impl.AccountAmountQuery;
 import is.currency.queue.impl.AccountClearQuery;
@@ -27,23 +31,19 @@ import is.currency.queue.impl.AccountListQuery;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-public class AccountManager {
+public class AccountManager implements Listener {
 
 	private Currency currency;
 
 	public AccountManager(Currency currency) {
 		this.currency = currency;
+		this.currency.getServer().getPluginManager().registerEvents(this, this.currency);
 	}
 
 	public void createAccount(String username) {
 		AccountCreateQuery query = new AccountCreateQuery(this.currency, username);
 		this.currency.getAccountQueue().submit(query);
 		query.awaitUninterruptedly();
-	}
-
-	@Deprecated
-	public void removeAccount(String username) {
-		this.deleteAccount(username);
 	}
 	
 	public void deleteAccount(String username) {
@@ -88,6 +88,11 @@ public class AccountManager {
 		this.currency.getAccountQueue().submit(query);
 		query.awaitUninterruptedly();
 		return query.getAmount();
+	}
+	
+	@EventHandler
+	public void onPlayerLogin(PlayerLoginEvent event) {
+		this.createAccount(event.getPlayer().getName());
 	}
 
 }
