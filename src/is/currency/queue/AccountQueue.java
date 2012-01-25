@@ -25,6 +25,8 @@ public class AccountQueue implements Runnable {
 				}
 				Thread.sleep(5);
 			}
+		} catch(InterruptedException exception) {
+			//ignore
 		} catch(Throwable throwable) {
 			throwable.printStackTrace();
 		}
