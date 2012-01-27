@@ -23,7 +23,7 @@ public class AccountQueue implements Runnable {
 				while((query = this.queue.poll()) != null) {
 					query.execute();
 				}
-				Thread.sleep(5);
+				Thread.sleep(1);
 			}
 		} catch(InterruptedException exception) {
 			//ignore

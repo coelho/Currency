@@ -1,6 +1,9 @@
 package is.currency.syst;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -66,6 +69,7 @@ public class AccountManager implements Listener {
 		return new AccountContext(this.currency, username);
 	}
 	
+	@Deprecated
 	public String[] getAccounts() {
 		return this.getAccountList().toArray(new String[0]);
 	}
@@ -74,7 +78,24 @@ public class AccountManager implements Listener {
 		AccountListQuery query = new AccountListQuery(this.currency);
 		this.currency.getAccountQueue().submit(query);
 		query.awaitUninterruptedly();
-		return query.getListing();
+		
+		List<String> usernames = new ArrayList<String>();
+		for(Account account : query.getListing()) {
+			usernames.add(account.getUsername());
+		}
+		return usernames;
+	}
+	
+	public Map<String, Double> getAccountBalanceMap() {
+		AccountListQuery query = new AccountListQuery(this.currency);
+		this.currency.getAccountQueue().submit(query);
+		query.awaitUninterruptedly();
+		
+		Map<String, Double> balanceMap = new HashMap<String, Double>();
+		for(Account account : query.getListing()) {
+			balanceMap.put(account.getUsername(), account.getBalance());
+		}
+		return balanceMap;
 	}
 	
 	public void clear() {

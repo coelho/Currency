@@ -10,21 +10,21 @@ import is.currency.syst.Account;
 public class AccountListQuery extends AccountQuery {
 
 	private Currency currency;
-	private List<String> listing;
+	private List<Account> listing;
 	
 	public AccountListQuery(Currency currency) {
 		this.currency = currency;
-		this.listing = new ArrayList<String>();
+		this.listing = new ArrayList<Account>();
 	}
 	
 	@Override
 	public void run() {
 		for(Account account : this.currency.getDatabase().find(Account.class).findList()) {
-			this.listing.add(account.getUsername());
+			this.listing.add(account);
 		}
 	}
 
-	public List<String> getListing() {
+	public List<Account> getListing() {
 		return this.listing;
 	}
 	
